@@ -1,0 +1,148 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".AddFragment"
+    android:orientation="vertical"
+    android:padding="@dimen/_10ssp"
+    >
+
+    <TextView
+        android:id="@+id/addtv"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Add New Expense"
+        android:textColor="#EF8767"
+        android:textStyle="bold"
+        android:gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_30ssp"
+        android:textSize="@dimen/_14ssp"
+        />
+
+    <RadioGroup
+        android:id="@+id/segmented_control"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_25ssp"
+        android:orientation="horizontal"
+        android:layout_gravity="center_horizontal"
+        android:layout_marginTop="@dimen/_15ssp"
+        android:weightSum="2"
+        android:layout_marginStart="@dimen/_20ssp"
+        android:layout_marginEnd="@dimen/_20ssp"
+        >
+
+        <RadioButton
+            android:id="@+id/expense_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Expense"
+            android:checked="true"
+            android:button="@null"
+            android:background="@drawable/radiobutton_selector_expense"
+            android:layout_weight="1"
+            android:textAlignment="center"
+            android:textStyle="bold"
+            android:textSize="@dimen/_10ssp"
+            />
+
+        <RadioButton
+            android:id="@+id/income_button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Income"
+            android:background="@drawable/radio_selector_income"
+            android:button="@null"
+            android:layout_weight="1"
+            android:textStyle="bold"
+            android:textSize="@dimen/_10ssp"
+            android:textAlignment="center"
+            />
+    </RadioGroup>
+
+    <TextView
+        android:id="@+id/adddate"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_30ssp"
+        android:background="@drawable/input_edittext"
+        android:layout_marginTop="@dimen/_15ssp"
+        android:hint="Select Date"
+        android:padding="@dimen/_5ssp"
+        android:layout_marginStart="@dimen/_15ssp"
+        android:layout_marginEnd="@dimen/_15ssp"
+        android:drawableEnd="@drawable/calender"
+        android:textSize="@dimen/_12ssp"
+        android:textColor="@color/black"
+        />
+
+    <Spinner
+        android:id="@+id/spinner"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_30ssp"
+        android:background="@drawable/input_edittext"
+        android:layout_marginStart="@dimen/_15ssp"
+        android:layout_marginEnd="@dimen/_15ssp"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:padding="@dimen/_5ssp"
+        />
+
+    <EditText
+        android:id="@+id/adddescription"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_70ssp"
+        android:background="@drawable/input_edittext"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:hint="Description (Optional)"
+        android:padding="@dimen/_5ssp"
+        android:layout_marginStart="@dimen/_15ssp"
+        android:layout_marginEnd="@dimen/_15ssp"
+        android:textSize="@dimen/_12ssp"
+        />
+    <EditText
+        android:id="@+id/addtotal"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_30ssp"
+        android:background="@drawable/input_edittext"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:hint="Total"
+        android:padding="@dimen/_5ssp"
+        android:layout_marginStart="@dimen/_15ssp"
+        android:layout_marginEnd="@dimen/_15ssp"
+        android:textSize="@dimen/_12ssp"
+        android:layout_marginBottom="@dimen/_10ssp"
+        android:inputType="number"
+        />
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:weightSum="2"
+        android:layout_marginTop="@dimen/_10ssp"
+        android:layout_marginStart="@dimen/_20ssp"
+        android:layout_marginEnd="@dimen/_20ssp"
+        >
+        <Button
+            android:id="@+id/cancel"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Cancel"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="@dimen/_5ssp"
+            />
+        <Button
+            android:id="@+id/submit"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Submit"
+            android:layout_weight="1"
+            android:layout_marginHorizontal="@dimen/_5ssp"
+            />
+
+
+
+    </LinearLayout>
+
+
+
+</LinearLayout>
