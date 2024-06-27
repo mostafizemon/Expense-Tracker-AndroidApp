@@ -60,20 +60,20 @@
             />
     </RadioGroup>
 
-    <TextView
-        android:id="@+id/adddate"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_30ssp"
-        android:background="@drawable/input_edittext"
-        android:layout_marginTop="@dimen/_15ssp"
-        android:hint="Select Date"
-        android:padding="@dimen/_5ssp"
-        android:layout_marginStart="@dimen/_15ssp"
-        android:layout_marginEnd="@dimen/_15ssp"
-        android:drawableEnd="@drawable/calender"
-        android:textSize="@dimen/_12ssp"
-        android:textColor="@color/black"
-        />
+<!--    <TextView-->
+<!--        android:id="@+id/adddate"-->
+<!--        android:layout_width="match_parent"-->
+<!--        android:layout_height="@dimen/_30ssp"-->
+<!--        android:background="@drawable/input_edittext"-->
+<!--        android:layout_marginTop="@dimen/_15ssp"-->
+<!--        android:hint="Select Date"-->
+<!--        android:padding="@dimen/_5ssp"-->
+<!--        android:layout_marginStart="@dimen/_15ssp"-->
+<!--        android:layout_marginEnd="@dimen/_15ssp"-->
+<!--        android:drawableEnd="@drawable/calender"-->
+<!--        android:textSize="@dimen/_12ssp"-->
+<!--        android:textColor="@color/black"-->
+<!--        />-->
 
     <Spinner
         android:id="@+id/spinner"

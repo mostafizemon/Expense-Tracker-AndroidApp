@@ -16,8 +16,10 @@ import android.widget.Toast;
 
 import com.mostafiz.expensetracker.databinding.FragmentAddBinding;
 
+import java.sql.Date;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
+import java.util.Locale;
 
 public class AddFragment extends Fragment {
     FragmentAddBinding binding;
@@ -62,27 +64,26 @@ public class AddFragment extends Fragment {
         });
 
 
-
-        Calendar calendar=Calendar.getInstance();
-        binding.adddate.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                day=calendar.get(Calendar.DAY_OF_MONTH);
-                month=calendar.get(Calendar.MONTH);
-                year=calendar.get(Calendar.YEAR);
-                DatePickerDialog datePickerDialog=new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-                    @Override
-                    public void onDateSet(DatePicker datePicker, int year, int month, int dayofmonth) {
-//                        binding.adddate.setText(SimpleDateFormat.getDateInstance().format(calendar.getTime()));
-                        month = month+1;
-                        date = dayofmonth+"/"+month+"/"+year;
-                        binding.adddate.setText(date);
-                    }
-                },year,month,day);
-                datePickerDialog.show();
-
-            }
-        });
+//        Calendar calendar=Calendar.getInstance();
+//        binding.adddate.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View view) {
+//                day=calendar.get(Calendar.DAY_OF_MONTH);
+//                month=calendar.get(Calendar.MONTH);
+//                year=calendar.get(Calendar.YEAR);
+//                DatePickerDialog datePickerDialog=new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
+//                    @Override
+//                    public void onDateSet(DatePicker datePicker, int year, int month, int dayofmonth) {
+////                        binding.adddate.setText(SimpleDateFormat.getDateInstance().format(calendar.getTime()));
+//                        month = month+1;
+//                        date = dayofmonth+"/"+month+"/"+year;
+//                        binding.adddate.setText(date);
+//                    }
+//                },year,month,day);
+//                datePickerDialog.show();
+//
+//            }
+//        });
 
 
 
@@ -93,12 +94,16 @@ public class AddFragment extends Fragment {
                 int selectedPosition = binding.spinner.getSelectedItemPosition();
                 if (selectedPosition == 0) {
                     // Handle the case where "Please select expense category" is selected
-                    Toast.makeText(getContext(), "Please select a valid expense category", Toast.LENGTH_SHORT).show();
+                    Toast.makeText(getContext(), "Please select a valid category", Toast.LENGTH_SHORT).show();
                 } else {
                     // Get the selected item
                     String selectedItem = (String) binding.spinner.getSelectedItem();
                     Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();
                 }
+
+                String currentDateTime = getCurrentDateTime();
+
+
 
 
 
@@ -110,16 +115,12 @@ public class AddFragment extends Fragment {
 
 
 
-
-
-
-
-
-
-
-
         return view;
     }
+
+
+
+
 
     private void setExpenseAdapter() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, expensecategory);
@@ -133,4 +134,15 @@ public class AddFragment extends Fragment {
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         binding.spinner.setAdapter(adapter);
     }
+
+    private String getCurrentDateTime() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return sdf.format(new java.util.Date());
+    }
+
+
+
+
+
+
 }
