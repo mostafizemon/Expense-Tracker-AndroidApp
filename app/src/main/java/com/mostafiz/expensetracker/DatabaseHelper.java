@@ -36,9 +36,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ContentValues contentValues=new ContentValues();
         contentValues.put("date",date);
         contentValues.put("category",category);
-        contentValues.put("description",description);
+        if (description != null) {
+            contentValues.put("description", description);
+        }
         contentValues.put("amount",amount);
-        db.insert("expense",null,contentValues);
+        try {
+            db.insert("expense", null, contentValues);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
+    }
+
+    //------------------------------------------------------------------------------------------------
+
+    public void addincome(String date,String category,String description,Double amount){
+        SQLiteDatabase db=this.getWritableDatabase();
+        ContentValues contentValues=new ContentValues();
+        contentValues.put("date",date);
+        contentValues.put("category",category);
+        if (description != null) {
+            contentValues.put("description", description);
+        }
+        contentValues.put("amount",amount);
+        try {
+            db.insert("income", null, contentValues);
+        } catch (Exception e) {
+            e.printStackTrace();
+        } finally {
+            db.close();
+        }
     }
 
 

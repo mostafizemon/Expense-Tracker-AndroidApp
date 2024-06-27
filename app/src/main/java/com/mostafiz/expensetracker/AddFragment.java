@@ -28,6 +28,7 @@ public class AddFragment extends Fragment {
     String[] expensecategory;
     String[] incomecategory;
     boolean isExpenseSelected = true;
+    DatabaseHelper databaseHelper;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -35,8 +36,7 @@ public class AddFragment extends Fragment {
         View view=binding.getRoot();
 
 
-
-
+        databaseHelper=new DatabaseHelper(getContext());
         expensecategory = getResources().getStringArray(R.array.expense_category);
         incomecategory = getResources().getStringArray(R.array.income_category);
 
@@ -91,32 +91,60 @@ public class AddFragment extends Fragment {
         binding.submit.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-                int selectedPosition = binding.spinner.getSelectedItemPosition();
-                if (selectedPosition == 0) {
-                    // Handle the case where "Please select expense category" is selected
-                    Toast.makeText(getContext(), "Please select a valid category", Toast.LENGTH_SHORT).show();
-                } else {
-                    // Get the selected item
-                    String selectedItem = (String) binding.spinner.getSelectedItem();
-                    Toast.makeText(getContext(), selectedItem, Toast.LENGTH_SHORT).show();
+                String description=binding.adddescription.getText().toString();
+                String samount=binding.addtotal.getText().toString().trim();
+
+
+                if (samount.isEmpty()) {
+                    binding.addtotal.setError("Please enter an amount");
+                    return; // Exit the method if amount is empty
                 }
+                Double amount=Double.parseDouble(samount);
 
-                String currentDateTime = getCurrentDateTime();
+                if (isExpenseSelected){
+                    int selectedPosition = binding.spinner.getSelectedItemPosition();
+                    if (selectedPosition == 0) {
+                        // Handle the case where "Please select expense category" is selected
+                        Toast.makeText(getContext(), "Please select a valid category", Toast.LENGTH_SHORT).show();
+                    } else {
+
+                            String selectedItem = (String) binding.spinner.getSelectedItem();
+                            String currentDateTime = getCurrentDateTime();
+                            databaseHelper.addexpense(currentDateTime,selectedItem,description,amount);
+                            Toast.makeText(getContext(),"Expense added Successfull",Toast.LENGTH_SHORT).show();
+                            binding.addtotal.setText("");
+                            binding.spinner.setSelection(0);
+                            binding.adddescription.setText("");
 
 
+                    }
+                        // Get the selected item
+                }
+                else {
+                    int selectedPosition = binding.spinner.getSelectedItemPosition();
+                    if (selectedPosition == 0) {
+                        // Handle the case where "Please select expense category" is selected
+                        Toast.makeText(getContext(), "Please select a valid category", Toast.LENGTH_SHORT).show();
+                    } else {
 
+                            String selectedItem = (String) binding.spinner.getSelectedItem();
+                            String currentDateTime = getCurrentDateTime();
+                            databaseHelper.addincome(currentDateTime,selectedItem,description,amount);
+                            Toast.makeText(getContext(),"Income added Successfull",Toast.LENGTH_SHORT).show();
+                            binding.addtotal.setText("");
+                            binding.spinner.setSelection(0);
+                            binding.adddescription.setText("");
 
-
-
+                    }
+                }
             }
+
         });
-
-
-
 
 
         return view;
     }
+
 
 
 
