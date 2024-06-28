@@ -71,4 +71,16 @@ public class MainActivity extends AppCompatActivity {
         fragmentTransaction.replace(R.id.mainactivityframelayout, fragment);
         fragmentTransaction.commit();
     }
+
+
+    @Override
+    public void onBackPressed() {
+        if (binding.bottomnavigationview.getSelectedItemId() != R.id.home) {
+            binding.bottomnavigationview.setSelectedItemId(R.id.home);
+        } else {
+            super.onBackPressed();
+        }
+    }
+
+
 }

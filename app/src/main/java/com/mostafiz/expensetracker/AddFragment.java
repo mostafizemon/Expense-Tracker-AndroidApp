@@ -4,6 +4,8 @@ import android.app.DatePickerDialog;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import android.provider.CalendarContract;
 import android.view.LayoutInflater;
@@ -21,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AddFragment extends Fragment {
+public class AddFragment extends Fragment implements IOnBackPressed{
     FragmentAddBinding binding;
     int day,month,year;
     String date;
@@ -29,6 +31,7 @@ public class AddFragment extends Fragment {
     String[] incomecategory;
     boolean isExpenseSelected = true;
     DatabaseHelper databaseHelper;
+    public static IOnBackPressed iOnBackPressed;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -62,29 +65,6 @@ public class AddFragment extends Fragment {
                 }
             }
         });
-
-
-//        Calendar calendar=Calendar.getInstance();
-//        binding.adddate.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View view) {
-//                day=calendar.get(Calendar.DAY_OF_MONTH);
-//                month=calendar.get(Calendar.MONTH);
-//                year=calendar.get(Calendar.YEAR);
-//                DatePickerDialog datePickerDialog=new DatePickerDialog(getContext(), new DatePickerDialog.OnDateSetListener() {
-//                    @Override
-//                    public void onDateSet(DatePicker datePicker, int year, int month, int dayofmonth) {
-////                        binding.adddate.setText(SimpleDateFormat.getDateInstance().format(calendar.getTime()));
-//                        month = month+1;
-//                        date = dayofmonth+"/"+month+"/"+year;
-//                        binding.adddate.setText(date);
-//                    }
-//                },year,month,day);
-//                datePickerDialog.show();
-//
-//            }
-//        });
-
 
 
 
@@ -142,6 +122,7 @@ public class AddFragment extends Fragment {
         });
 
 
+
         return view;
     }
 
@@ -156,7 +137,6 @@ public class AddFragment extends Fragment {
         binding.spinner.setAdapter(adapter);
     }
 
-    // Method to set income category adapter
     private void setIncomeAdapter() {
         ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, incomecategory);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
@@ -173,4 +153,12 @@ public class AddFragment extends Fragment {
 
 
 
+    @Override
+    public void onBackPressed() {
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+        fragmentTransaction.replace(R.id.mainactivityframelayout, new AddFragment());
+        fragmentTransaction.commit();
+
+    }
 }

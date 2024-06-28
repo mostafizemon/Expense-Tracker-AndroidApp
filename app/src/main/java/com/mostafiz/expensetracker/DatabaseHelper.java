@@ -2,10 +2,15 @@ package com.mostafiz.expensetracker;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 
 import androidx.annotation.Nullable;
+
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
+import java.util.Locale;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
 
@@ -68,6 +73,44 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             db.close();
         }
     }
+
+
+    //------------------------------------------------------------------------------------------------
+    public double calculatetotalexpense(){
+        double totalexpense=0;
+        SQLiteDatabase sqLiteDatabase=this.getReadableDatabase();
+        Cursor cursor=sqLiteDatabase.rawQuery("select * from expense",null);
+        if (cursor!=null & cursor.getCount()>0){
+            while (cursor.moveToNext()){
+                double expense=cursor.getDouble(4);
+                totalexpense=totalexpense+expense;
+            }
+        }
+        return totalexpense;
+    }
+
+    //------------------------------------------------------------------------------------------------
+    public double calculatetotalincome(){
+        double totalincome=0;
+        SQLiteDatabase sqLiteDatabase=this.getReadableDatabase();
+        Cursor cursor=sqLiteDatabase.rawQuery("select * from income",null);
+        if (cursor!=null & cursor.getCount()>0){
+            while (cursor.moveToNext()){
+                double income=cursor.getDouble(4);
+                totalincome=totalincome+income;
+            }
+        }
+        return totalincome;
+    }
+
+    //-----------------------------------------------------------------------------------------------------
+    public Cursor getSumAmountByCategory() {
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor=db.rawQuery("SELECT category, SUM(amount) as total FROM expense GROUP BY category", null);
+        return cursor;
+    }
+
 
 
 
