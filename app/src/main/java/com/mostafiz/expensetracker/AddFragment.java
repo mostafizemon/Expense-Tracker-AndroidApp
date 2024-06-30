@@ -23,7 +23,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Locale;
 
-public class AddFragment extends Fragment implements IOnBackPressed{
+public class AddFragment extends Fragment{
     FragmentAddBinding binding;
     int day,month,year;
     String date;
@@ -31,7 +31,6 @@ public class AddFragment extends Fragment implements IOnBackPressed{
     String[] incomecategory;
     boolean isExpenseSelected = true;
     DatabaseHelper databaseHelper;
-    public static IOnBackPressed iOnBackPressed;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,Bundle savedInstanceState) {
@@ -43,11 +42,13 @@ public class AddFragment extends Fragment implements IOnBackPressed{
         expensecategory = getResources().getStringArray(R.array.expense_category);
         incomecategory = getResources().getStringArray(R.array.income_category);
 
+        //-----------------------------------------------------------------
         ArrayAdapter<String> expenseAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, expensecategory);
         expenseAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 
         ArrayAdapter<String> incomeAdapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, incomecategory);
         incomeAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        //------------------------------------------------------------------
 
         // Set initial adapter (expense by default)
         binding.spinner.setAdapter(expenseAdapter);
@@ -90,7 +91,10 @@ public class AddFragment extends Fragment implements IOnBackPressed{
 
                             String selectedItem = (String) binding.spinner.getSelectedItem();
                             String currentDateTime = getCurrentDateTime();
-                            databaseHelper.addexpense(currentDateTime,selectedItem,description,amount);
+                            String currentmonthyear=getcurrentmonthyear();
+                            String currentyear=getcurrentyear();
+                            String currentdate=getcurrentdate();
+                            databaseHelper.addexpense(currentDateTime,selectedItem,description,amount,currentdate,currentmonthyear,currentyear);
                             Toast.makeText(getContext(),"Expense added Successfull",Toast.LENGTH_SHORT).show();
                             binding.addtotal.setText("");
                             binding.spinner.setSelection(0);
@@ -109,12 +113,14 @@ public class AddFragment extends Fragment implements IOnBackPressed{
 
                             String selectedItem = (String) binding.spinner.getSelectedItem();
                             String currentDateTime = getCurrentDateTime();
-                            databaseHelper.addincome(currentDateTime,selectedItem,description,amount);
+                            String currentmonthyear=getcurrentmonthyear();
+                            String currentyear=getcurrentyear();
+                            String currentdate=getcurrentdate();
+                            databaseHelper.addincome(currentDateTime,selectedItem,description,amount,currentdate,currentmonthyear,currentyear);
                             Toast.makeText(getContext(),"Income added Successfull",Toast.LENGTH_SHORT).show();
                             binding.addtotal.setText("");
                             binding.spinner.setSelection(0);
                             binding.adddescription.setText("");
-
                     }
                 }
             }
@@ -129,36 +135,24 @@ public class AddFragment extends Fragment implements IOnBackPressed{
 
 
 
-
-
-    private void setExpenseAdapter() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, expensecategory);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinner.setAdapter(adapter);
-    }
-
-    private void setIncomeAdapter() {
-        ArrayAdapter<String> adapter = new ArrayAdapter<>(getContext(), android.R.layout.simple_spinner_item, incomecategory);
-        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        binding.spinner.setAdapter(adapter);
-    }
-
     private String getCurrentDateTime() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss", Locale.getDefault());
+        return sdf.format(new java.util.Date());
+    }
+    private String getcurrentdate() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd", Locale.getDefault());
+        return sdf.format(new java.util.Date());
+    }
+    private String getcurrentmonthyear() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
+        return sdf.format(new java.util.Date());
+    }
+    private String getcurrentyear() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy", Locale.getDefault());
         return sdf.format(new java.util.Date());
     }
 
 
 
 
-
-
-    @Override
-    public void onBackPressed() {
-        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-        FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-        fragmentTransaction.replace(R.id.mainactivityframelayout, new AddFragment());
-        fragmentTransaction.commit();
-
-    }
 }

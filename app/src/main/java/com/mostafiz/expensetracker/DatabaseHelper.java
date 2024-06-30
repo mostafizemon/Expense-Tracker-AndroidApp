@@ -21,8 +21,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL("create table expense(id INTEGER primary key autoincrement, date TEXT,category TEXT, description TEXT, amount DOUBLE ) ");
-        db.execSQL("create table income(id INTEGER primary key autoincrement, date TEXT,category TEXT, description TEXT, amount DOUBLE ) ");
+        db.execSQL("create table expense(id INTEGER primary key autoincrement, date TEXT,category TEXT, description TEXT, amount DOUBLE,currentdate TEXT,monthyear TEXT,year TEXT) ");
+        db.execSQL("create table income(id INTEGER primary key autoincrement, date TEXT,category TEXT, description TEXT, amount DOUBLE,currentdate TEXT,monthyear TEXT,year TEXT ) ");
 
     }
 
@@ -36,7 +36,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //--------------------------------------------------------------------------------------
 
-    public void addexpense(String date,String category,String description,Double amount){
+    public void addexpense(String date,String category,String description,Double amount,String currentdate,String monthyear,String year){
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put("date",date);
@@ -45,6 +45,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put("description", description);
         }
         contentValues.put("amount",amount);
+        contentValues.put("currentdate",currentdate);
+        contentValues.put("monthyear",monthyear);
+        contentValues.put("year",year);
         try {
             db.insert("expense", null, contentValues);
         } catch (Exception e) {
@@ -56,7 +59,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //------------------------------------------------------------------------------------------------
 
-    public void addincome(String date,String category,String description,Double amount){
+    public void addincome(String date,String category,String description,Double amount,String currentdate,String monthyear,String year){
         SQLiteDatabase db=this.getWritableDatabase();
         ContentValues contentValues=new ContentValues();
         contentValues.put("date",date);
@@ -65,6 +68,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             contentValues.put("description", description);
         }
         contentValues.put("amount",amount);
+        contentValues.put("currentdate",currentdate);
+        contentValues.put("monthyear",monthyear);
+        contentValues.put("year",year);
         try {
             db.insert("income", null, contentValues);
         } catch (Exception e) {
@@ -78,8 +84,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //------------------------------------------------------------------------------------------------
     public double calculatetotalexpense(){
         double totalexpense=0;
+        String monthandyear=getcurrentmonthyear();
         SQLiteDatabase sqLiteDatabase=this.getReadableDatabase();
-        Cursor cursor=sqLiteDatabase.rawQuery("select * from expense",null);
+        Cursor cursor=sqLiteDatabase.rawQuery("select * from expense where monthyear like ?",new String[]{monthandyear+"%"});
         if (cursor!=null & cursor.getCount()>0){
             while (cursor.moveToNext()){
                 double expense=cursor.getDouble(4);
@@ -93,7 +100,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     public double calculatetotalincome(){
         double totalincome=0;
         SQLiteDatabase sqLiteDatabase=this.getReadableDatabase();
-        Cursor cursor=sqLiteDatabase.rawQuery("select * from income",null);
+        String monthandyear=getcurrentmonthyear();
+        Cursor cursor=sqLiteDatabase.rawQuery("select * from income where monthyear like ?",new String[]{monthandyear+"%"});
         if (cursor!=null & cursor.getCount()>0){
             while (cursor.moveToNext()){
                 double income=cursor.getDouble(4);
@@ -104,13 +112,28 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //-----------------------------------------------------------------------------------------------------
-    public Cursor getSumAmountByCategory() {
-
+    public Cursor getExpenseSumAmountByCategory() {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor=db.rawQuery("SELECT category, SUM(amount) as total FROM expense GROUP BY category", null);
+        String monthandyear=getcurrentmonthyear();
+        Cursor cursor = db.rawQuery(
+                "SELECT category, SUM(amount) as total FROM expense WHERE monthyear LIKE ? GROUP BY category",
+                new String[]{monthandyear + "%"});
+        return cursor;
+    }
+    public Cursor getIncomeSumAmountByCategory() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String monthandyear=getcurrentmonthyear();
+        Cursor cursor = db.rawQuery(
+                "SELECT category, SUM(amount) as total FROM income WHERE monthyear LIKE ? GROUP BY category",
+                new String[]{monthandyear + "%"});
         return cursor;
     }
 
+    //-----------------------------------------------------------------------------------------------------
+    private String getcurrentmonthyear() {
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
+        return sdf.format(new java.util.Date());
+    }
 
 
 

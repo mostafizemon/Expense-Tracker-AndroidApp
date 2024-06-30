@@ -9,6 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.BaseAdapter;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 
 import com.mostafiz.expensetracker.databinding.FragmentHomeBinding;
@@ -22,6 +23,7 @@ public class HomeFragment extends Fragment {
     DatabaseHelper databaseHelper;
     ArrayList<HashMap<String,String>> arrayList;
     HashMap<String,String> hashMap;
+    boolean isExpenseSelected = true;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -31,31 +33,19 @@ public class HomeFragment extends Fragment {
         databaseHelper=new DatabaseHelper(getContext());
         updaterealtime();
 
-        Cursor cursor= databaseHelper.getSumAmountByCategory();
-        if (cursor!=null && cursor.getCount()>0){
-            arrayList=new ArrayList<>();
-            while (cursor.moveToNext()){
-                double amount=cursor.getDouble(1);
-                String category=cursor.getString(0);
-
-                hashMap=new HashMap<>();
-                hashMap.put("amount", String.valueOf(amount));
-                hashMap.put("category",category);
-                arrayList.add(hashMap);
-
+        binding.homesegmentedcontrol.setOnCheckedChangeListener(new RadioGroup.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(RadioGroup group, int checkedId) {
+                if (checkedId == R.id.home_expense) {
+                    isExpenseSelected = true;
+                } else if (checkedId == R.id.home_income) {
+                    isExpenseSelected = false;
+                }
+                updateGridview();
             }
-            binding.homegridview.setAdapter(new MyAdapter());
-        }
-        else {
-            binding.homeErrormsg.setVisibility(View.VISIBLE);
-            binding.homeErrormsg.setText("No Data Found");
+        });
 
-        }
-
-
-
-
-
+        updateGridview();
         return view;
     }
 //--------------------------------------------------------------------------------------
@@ -69,6 +59,56 @@ public void updaterealtime(){
         super.onResume();
         updaterealtime();
     }
+
+    //---------------------------------------------------------------
+
+    public void updateGridview(){
+        if (isExpenseSelected){
+            Cursor cursor= databaseHelper.getExpenseSumAmountByCategory();
+            if (cursor!=null && cursor.getCount()>0){
+                arrayList=new ArrayList<>();
+                while (cursor.moveToNext()){
+                    double amount=cursor.getDouble(1);
+                    String category=cursor.getString(0);
+
+                    hashMap=new HashMap<>();
+                    hashMap.put("amount", String.valueOf(amount));
+                    hashMap.put("category",category);
+                    arrayList.add(hashMap);
+
+                }
+                binding.homegridview.setAdapter(new MyAdapter());
+            }
+            else {
+                binding.homeErrormsg.setVisibility(View.VISIBLE);
+                binding.homeErrormsg.setText("No Data Found");
+            }
+
+        }
+        else {
+            Cursor cursor= databaseHelper.getIncomeSumAmountByCategory();
+            if (cursor!=null && cursor.getCount()>0){
+                arrayList=new ArrayList<>();
+                while (cursor.moveToNext()){
+                    double amount=cursor.getDouble(1);
+                    String category=cursor.getString(0);
+
+                    hashMap=new HashMap<>();
+                    hashMap.put("amount", String.valueOf(amount));
+                    hashMap.put("category",category);
+                    arrayList.add(hashMap);
+
+                }
+                binding.homegridview.setAdapter(new MyAdapter());
+            }
+            else {
+                binding.homeErrormsg.setVisibility(View.VISIBLE);
+                binding.homeErrormsg.setText("No Data Found");
+
+            }
+        }
+    }
+    //--------------------------------------------------------------------------------
 
 
     public class MyAdapter extends BaseAdapter{

@@ -119,7 +119,7 @@
 <!--    </ScrollView>-->
 
     <RadioGroup
-        android:id="@+id/home_segmented_control"
+        android:id="@+id/homesegmentedcontrol"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_30ssp"
         android:orientation="horizontal"
@@ -131,7 +131,7 @@
         >
 
         <RadioButton
-            android:id="@+id/home_expense_button"
+            android:id="@+id/home_expense"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Expense"
@@ -145,7 +145,7 @@
             />
 
         <RadioButton
-            android:id="@+id/home_income_button"
+            android:id="@+id/home_income"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Income"
