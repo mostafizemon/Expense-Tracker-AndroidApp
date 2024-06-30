@@ -153,6 +153,37 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sdf.format(new java.util.Date());
     }
 
+    //-----------------------------------------------------------------------------------------------------
+//    public Cursor getDailyExpenses() {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        String query = "SELECT currentdate, SUM(amount) as total FROM expense GROUP BY currentdate ORDER BY currentdate ASC";
+//        return db.rawQuery(query, null);
+//    }
+//    public Cursor getDailyIncomes() {
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        String query = "SELECT currentdate, SUM(amount) as total FROM income GROUP BY currentdate ORDER BY currentdate ASC";
+//        return db.rawQuery(query, null);
+//    }
+
+    public Cursor getDailyExpensesAndIncomes() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query =
+                "SELECT date, " +
+                        "SUM(expense_amount) AS expense, " +
+                        "SUM(income_amount) AS income " +
+                        "FROM ( " +
+                        "    SELECT currentdate AS date, amount AS expense_amount, 0 AS income_amount " +
+                        "    FROM expense " +
+                        "    UNION ALL " +
+                        "    SELECT currentdate AS date, 0 AS expense_amount, amount AS income_amount " +
+                        "    FROM income " +
+                        ") " +
+                        "GROUP BY date " +
+                        "ORDER BY date ASC";
+        return db.rawQuery(query, null);
+    }
+
+
 
 
 
