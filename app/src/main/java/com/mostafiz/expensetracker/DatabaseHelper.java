@@ -129,6 +129,24 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return cursor;
     }
 
+    public Cursor getIncomeSumAmountByMonthYear() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String monthandyear = getcurrentmonthyear();
+        Cursor cursor = db.rawQuery(
+                "SELECT monthyear, SUM(amount) as total FROM income WHERE monthyear LIKE ? GROUP BY monthyear",
+                new String[]{monthandyear + "%"});
+        return cursor;
+    }
+
+    public Cursor getExpenseSumAmountByMonthYear() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String monthandyear = getcurrentmonthyear();
+        Cursor cursor = db.rawQuery(
+                "SELECT monthyear, SUM(amount) as total FROM expense WHERE monthyear LIKE ? GROUP BY monthyear",
+                new String[]{monthandyear + "%"});
+        return cursor;
+    }
+
     //-----------------------------------------------------------------------------------------------------
     private String getcurrentmonthyear() {
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM", Locale.getDefault());
