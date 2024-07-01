@@ -13,7 +13,7 @@
         android:orientation="horizontal"
         android:background="@drawable/balance_card"
         android:weightSum="2"
-        android:layout_marginTop="@dimen/_30ssp"
+        android:layout_marginTop="@dimen/_20ssp"
         >
         <RelativeLayout
             android:layout_width="wrap_content"

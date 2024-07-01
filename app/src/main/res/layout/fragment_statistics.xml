@@ -9,10 +9,10 @@
 
     <com.github.mikephil.charting.charts.BarChart
         android:id="@+id/barchart"
-        android:layout_marginTop="@dimen/_40ssp"
+        android:layout_marginTop="@dimen/_10ssp"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginBottom="@dimen/_100ssp"
+        android:layout_marginBottom="@dimen/_80ssp"
         />
 
 </LinearLayout>
