@@ -38,7 +38,9 @@ public class ShowActivity extends AppCompatActivity {
         binding=ActivityShowBinding.inflate(getLayoutInflater());
         View view=binding.getRoot();
         setContentView(view);
+
         binding.showcategory.setText(showcategory);
+
 
         databaseHelper=new DatabaseHelper(ShowActivity.this);
 
@@ -65,9 +67,6 @@ public class ShowActivity extends AppCompatActivity {
             binding.errormsgshow.setVisibility(View.VISIBLE);
             binding.errormsgshow.setText("No Data Found");
         }
-
-
-
 
     }
 

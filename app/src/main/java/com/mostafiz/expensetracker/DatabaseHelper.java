@@ -194,6 +194,25 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return db.rawQuery(query, new String[]{category, monthyear});
     }
 
+    public Cursor getRecentTransactions() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT * FROM (" +
+                "SELECT 'expense' AS type, id, date, category, description, amount FROM expense " +
+                "UNION ALL " +
+                "SELECT 'income' AS type, id, date, category, description, amount FROM income " +
+                ") " +
+                "ORDER BY date DESC LIMIT 10";
+        return db.rawQuery(query, null);
+    }
+
+    public void delete(String table,String id){
+        SQLiteDatabase db=this.getWritableDatabase();
+        db.execSQL("delete from "+table+" where id like "+id);
+    }
+
+
+
+
 
 
 

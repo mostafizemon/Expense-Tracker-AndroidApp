@@ -65,52 +65,81 @@ public void updaterealtime(){
 
     //---------------------------------------------------------------
 
-    public void updateGridview(){
-        if (isExpenseSelected){
-            Cursor cursor= databaseHelper.getExpenseSumAmountByCategory();
-            if (cursor!=null && cursor.getCount()>0){
-                arrayList=new ArrayList<>();
-                while (cursor.moveToNext()){
-                    double amount=cursor.getDouble(1);
-                    String category=cursor.getString(0);
+    public void updateGridview() {
+        arrayList = new ArrayList<>(); // Initialize a new ArrayList
+        Cursor cursor;
 
-                    hashMap=new HashMap<>();
-                    hashMap.put("amount", String.valueOf(amount));
-                    hashMap.put("category",category);
-                    arrayList.add(hashMap);
-
-                }
-                binding.homegridview.setAdapter(new MyAdapter());
-            }
-            else {
-                binding.homeErrormsg.setVisibility(View.VISIBLE);
-                binding.homeErrormsg.setText("No Data Found");
-            }
-
+        if (isExpenseSelected) {
+            cursor = databaseHelper.getExpenseSumAmountByCategory();
+        } else {
+            cursor = databaseHelper.getIncomeSumAmountByCategory();
         }
-        else {
-            Cursor cursor= databaseHelper.getIncomeSumAmountByCategory();
-            if (cursor!=null && cursor.getCount()>0){
-                arrayList=new ArrayList<>();
-                while (cursor.moveToNext()){
-                    double amount=cursor.getDouble(1);
-                    String category=cursor.getString(0);
 
-                    hashMap=new HashMap<>();
-                    hashMap.put("amount", String.valueOf(amount));
-                    hashMap.put("category",category);
-                    arrayList.add(hashMap);
+        if (cursor != null && cursor.getCount() > 0) {
+            while (cursor.moveToNext()) {
+                double amount = cursor.getDouble(1);
+                String category = cursor.getString(0);
 
-                }
-                binding.homegridview.setAdapter(new MyAdapter());
+                HashMap<String, String> hashMap = new HashMap<>(); // Create a new HashMap for each entry
+                hashMap.put("amount", String.valueOf(amount));
+                hashMap.put("category", category);
+                arrayList.add(hashMap);
             }
-            else {
-                binding.homeErrormsg.setVisibility(View.VISIBLE);
-                binding.homeErrormsg.setText("No Data Found");
+            cursor.close();
 
-            }
+            binding.homegridview.setAdapter(new MyAdapter());
+            binding.homeErrormsg.setVisibility(View.GONE); // Hide the error message if data is found
+        } else {
+            binding.homeErrormsg.setVisibility(View.VISIBLE);
+            binding.homeErrormsg.setText("No Data Found");
         }
     }
+//    public void updateGridview(){
+//        if (isExpenseSelected){
+//            Cursor cursor= databaseHelper.getExpenseSumAmountByCategory();
+//            if (cursor!=null && cursor.getCount()>0){
+//                arrayList=new ArrayList<>();
+//                while (cursor.moveToNext()){
+//                    double amount=cursor.getDouble(1);
+//                    String category=cursor.getString(0);
+//
+//                    hashMap=new HashMap<>();
+//                    hashMap.put("amount", String.valueOf(amount));
+//                    hashMap.put("category",category);
+//                    arrayList.add(hashMap);
+//
+//                }
+//                binding.homegridview.setAdapter(new MyAdapter());
+//            }
+//            else {
+//                binding.homeErrormsg.setVisibility(View.VISIBLE);
+//                binding.homeErrormsg.setText("No Data Found");
+//            }
+//
+//        }
+//        else {
+//            Cursor cursor= databaseHelper.getIncomeSumAmountByCategory();
+//            if (cursor!=null && cursor.getCount()>0){
+//                arrayList=new ArrayList<>();
+//                while (cursor.moveToNext()){
+//                    double amount=cursor.getDouble(1);
+//                    String category=cursor.getString(0);
+//
+//                    hashMap=new HashMap<>();
+//                    hashMap.put("amount", String.valueOf(amount));
+//                    hashMap.put("category",category);
+//                    arrayList.add(hashMap);
+//
+//                }
+//                binding.homegridview.setAdapter(new MyAdapter());
+//            }
+//            else {
+//                binding.homeErrormsg.setVisibility(View.VISIBLE);
+//                binding.homeErrormsg.setText("No Data Found");
+//
+//            }
+//        }
+//    }
     //--------------------------------------------------------------------------------
 
 

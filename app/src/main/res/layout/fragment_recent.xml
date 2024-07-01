@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context=".RecentFragment"
+    android:orientation="vertical"
+    android:padding="@dimen/_10ssp"
+    >
+
+
+    <TextView
+        android:id="@+id/recenterrormsg"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:text="No Recent Data"
+        android:gravity="center"
+        android:visibility="gone"
+        />
+
+    <ListView
+        android:id="@+id/recentListView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+</LinearLayout>
