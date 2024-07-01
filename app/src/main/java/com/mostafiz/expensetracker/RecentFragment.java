@@ -1,11 +1,15 @@
 package com.mostafiz.expensetracker;
 
+import static android.app.Activity.RESULT_OK;
+
 import android.annotation.SuppressLint;
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 
 import androidx.fragment.app.Fragment;
 
+import android.provider.Telephony;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -26,6 +30,8 @@ public class RecentFragment extends Fragment {
     private DatabaseHelper databaseHelper;
     private ArrayList<HashMap<String, String>> arrayList;
     private HashMap<String, String> hashMap;
+    private static final int EDIT_REQUEST_CODE = 1;
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
@@ -34,7 +40,6 @@ public class RecentFragment extends Fragment {
 
         databaseHelper = new DatabaseHelper(getContext());
         fetchRecentTransactions();
-
 
 
 
@@ -123,6 +128,14 @@ public class RecentFragment extends Fragment {
             tvDate.setText(date);
 
             editButton.setOnClickListener(v -> {
+
+                Intent intent = new Intent(getContext(), EditActivity.class);
+                intent.putExtra("id", id);
+                intent.putExtra("type", type);
+                intent.putExtra("amount", amount);
+                intent.putExtra("description", description);
+                intent.putExtra("category", category);
+                startActivityForResult(intent, EDIT_REQUEST_CODE);
                 // Handle edit button click
             });
 
@@ -136,15 +149,15 @@ public class RecentFragment extends Fragment {
         }
     }
 
-
-
-
-
-
-
-
-
-
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        super.onActivityResult(requestCode, resultCode, data);
+        if (requestCode == EDIT_REQUEST_CODE && resultCode == RESULT_OK) {
+            // Data has been updated, refresh the list
+            fetchRecentTransactions();
+            ((BaseAdapter) binding.recentListView.getAdapter()).notifyDataSetChanged();
+        }
+    }
 
 
 

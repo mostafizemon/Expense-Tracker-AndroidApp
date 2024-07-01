@@ -210,6 +210,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL("delete from "+table+" where id like "+id);
     }
 
+    public boolean updateTransaction(String id, String type, String amount, String description, String category) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues contentValues = new ContentValues();
+        contentValues.put("amount", amount);
+        contentValues.put("description", description);
+        contentValues.put("category", category);
+
+        int result = db.update(type, contentValues, "id = ?", new String[]{id});
+        return result > 0;
+    }
+
+
 
 
 

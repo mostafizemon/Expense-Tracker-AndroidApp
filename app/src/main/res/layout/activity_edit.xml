@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".AddFragment"
+    tools:context=".EditActivity"
     android:orientation="vertical"
     android:padding="@dimen/_10ssp"
     >
@@ -12,7 +12,7 @@
         android:id="@+id/addtv"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="Add New Expense"
+        android:text="Edit Info"
         android:textColor="#EF8767"
         android:textStyle="bold"
         android:gravity="center_horizontal"
@@ -20,49 +20,9 @@
         android:textSize="@dimen/_14ssp"
         />
 
-    <RadioGroup
-        android:id="@+id/segmented_control"
-        android:layout_width="match_parent"
-        android:layout_height="@dimen/_25ssp"
-        android:orientation="horizontal"
-        android:layout_gravity="center_horizontal"
-        android:layout_marginTop="@dimen/_15ssp"
-        android:weightSum="2"
-        android:layout_marginStart="@dimen/_20ssp"
-        android:layout_marginEnd="@dimen/_20ssp"
-        >
-
-        <RadioButton
-            android:id="@+id/expense_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Expense"
-            android:checked="true"
-            android:button="@null"
-            android:background="@drawable/radiobutton_selector_expense"
-            android:layout_weight="1"
-            android:textAlignment="center"
-            android:textStyle="bold"
-            android:textSize="@dimen/_10ssp"
-            />
-
-        <RadioButton
-            android:id="@+id/income_button"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="Income"
-            android:background="@drawable/radio_selector_income"
-            android:button="@null"
-            android:layout_weight="1"
-            android:textStyle="bold"
-            android:textSize="@dimen/_10ssp"
-            android:textAlignment="center"
-            />
-    </RadioGroup>
-
 
     <Spinner
-        android:id="@+id/spinner"
+        android:id="@+id/editspinner"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_30ssp"
         android:background="@drawable/input_edittext"
@@ -73,7 +33,7 @@
         />
 
     <EditText
-        android:id="@+id/adddescription"
+        android:id="@+id/editdescription"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_70ssp"
         android:background="@drawable/input_edittext"
@@ -85,7 +45,7 @@
         android:textSize="@dimen/_12ssp"
         />
     <EditText
-        android:id="@+id/addtotal"
+        android:id="@+id/edittotal"
         android:layout_width="match_parent"
         android:layout_height="@dimen/_30ssp"
         android:background="@drawable/input_edittext"
@@ -109,7 +69,7 @@
         android:layout_marginEnd="@dimen/_20ssp"
         >
         <Button
-            android:id="@+id/cancel"
+            android:id="@+id/editcancel"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Cancel"
@@ -117,7 +77,7 @@
             android:layout_marginHorizontal="@dimen/_5ssp"
             />
         <Button
-            android:id="@+id/submit"
+            android:id="@+id/update_button"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="Submit"
