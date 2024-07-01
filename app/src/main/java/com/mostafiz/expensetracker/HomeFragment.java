@@ -1,5 +1,6 @@
 package com.mostafiz.expensetracker;
 
+import android.content.Intent;
 import android.database.Cursor;
 import android.os.Bundle;
 
@@ -24,6 +25,8 @@ public class HomeFragment extends Fragment {
     ArrayList<HashMap<String,String>> arrayList;
     HashMap<String,String> hashMap;
     boolean isExpenseSelected = true;
+    public static String selected;
+    public static String showcategory;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -142,6 +145,29 @@ public void updaterealtime(){
 
             tvcategory.setText(category);
             tvamount.setText("BDT "+amount);
+
+            if (isExpenseSelected==true){
+
+                myView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(getContext(),ShowActivity.class));
+                        selected="expense";
+                        showcategory=category;
+                    }
+                });
+            }
+            else {
+                myView.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View view) {
+                        startActivity(new Intent(getContext(),ShowActivity.class));
+                        selected="income";
+                        showcategory=category;
+                    }
+                });
+
+            }
 
 
             return myView;

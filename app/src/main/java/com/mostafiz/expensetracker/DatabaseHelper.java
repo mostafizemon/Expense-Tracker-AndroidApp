@@ -153,17 +153,20 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return sdf.format(new java.util.Date());
     }
 
-    //-----------------------------------------------------------------------------------------------------
-//    public Cursor getDailyExpenses() {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        String query = "SELECT currentdate, SUM(amount) as total FROM expense GROUP BY currentdate ORDER BY currentdate ASC";
-//        return db.rawQuery(query, null);
-//    }
-//    public Cursor getDailyIncomes() {
-//        SQLiteDatabase db = this.getReadableDatabase();
-//        String query = "SELECT currentdate, SUM(amount) as total FROM income GROUP BY currentdate ORDER BY currentdate ASC";
-//        return db.rawQuery(query, null);
-//    }
+    public Cursor getexpensebymonth() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT monthyear, SUM(amount) as total FROM expense GROUP BY monthyear ORDER BY monthyear ASC";
+        return db.rawQuery(query, null);
+    }
+
+    public Cursor getincomebymonth() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT monthyear, SUM(amount) as total FROM income GROUP BY monthyear ORDER BY monthyear ASC";
+        return db.rawQuery(query, null);
+    }
+
+
+
 
     public Cursor getDailyExpensesAndIncomes() {
         SQLiteDatabase db = this.getReadableDatabase();
@@ -182,6 +185,16 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                         "ORDER BY date ASC";
         return db.rawQuery(query, null);
     }
+    String table=HomeFragment.selected;
+    String category=HomeFragment.showcategory;
+    public Cursor showcategorywisealldata(String table, String category) {
+        String monthyear = getcurrentmonthyear();
+        SQLiteDatabase db = this.getReadableDatabase();
+        String query = "SELECT id, amount, description, date FROM " + table + " WHERE category = ? AND monthyear = ?";
+        return db.rawQuery(query, new String[]{category, monthyear});
+    }
+
+
 
 
 

@@ -1,5 +1,6 @@
 package com.mostafiz.expensetracker;
 
+import android.annotation.SuppressLint;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
@@ -23,6 +24,9 @@ import com.mostafiz.expensetracker.databinding.FragmentStatisticsBinding;
 
 import java.text.DateFormatSymbols;
 import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 
 public class StatisticsFragment extends Fragment {
@@ -49,87 +53,72 @@ public class StatisticsFragment extends Fragment {
     }
 
     private void setupBarChart() {
-        ArrayList<BarEntry> expenseEntries = getExpenseEntries();
-        ArrayList<BarEntry> incomeEntries = getIncomeEntries();
-        ArrayList<String> months = getMonths();
+        ArrayList<BarEntry> entries = getBarEntries();
 
-        BarDataSet expenseDataSet = new BarDataSet(expenseEntries, "Expenses");
-        expenseDataSet.setColor(Color.RED);
-        BarDataSet incomeDataSet = new BarDataSet(incomeEntries, "Incomes");
-        incomeDataSet.setColor(Color.GREEN);
+        BarDataSet dataSet = new BarDataSet(entries, "Monthly Data");
+        dataSet.setColors(new int[]{Color.RED, Color.GREEN}); // Red for expenses, Green for incomes
+        dataSet.setStackLabels(new String[]{"Expenses", "Incomes"});
 
-        BarData barData = new BarData(expenseDataSet, incomeDataSet);
-        float groupSpace = 0.2f;
-        float barSpace = 0.05f;
-        float barWidth = 0.4f;
-        barData.setBarWidth(barWidth); // set the width of each bar
+        BarData barData = new BarData(dataSet);
         binding.barchart.setData(barData);
-
-        binding.barchart.groupBars(0, groupSpace, barSpace);
         binding.barchart.getDescription().setEnabled(false);
         binding.barchart.setFitBars(true);
-
+        // Customize X axis (months)
+        List<String> months = getMonths(); // Get months for X axis
         XAxis xAxis = binding.barchart.getXAxis();
         xAxis.setValueFormatter(new IndexAxisValueFormatter(months));
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setGranularity(1);
         xAxis.setLabelCount(months.size());
-        xAxis.setCenterAxisLabels(true);
 
-        YAxis leftAxis = binding.barchart.getAxisLeft();
-        leftAxis.setAxisMinimum(0f); // Start Y-axis at zero
-        leftAxis.setGranularity(1f); // Force labels to 1-unit intervals
-        leftAxis.setLabelCount(6, true); // Set number of labels
-        //binding.barchart.getAxisRight().setEnabled(false); // Disable right Y-axis
-
-        // Adding some padding to ensure small differences are visible
-        barData.setBarWidth(0.45f);
-        binding.barchart.getXAxis().setAxisMinimum(0);
-        binding.barchart.getXAxis().setAxisMaximum(months.size());
-
-        binding.barchart.invalidate();
+        binding.barchart.invalidate(); // Refresh chart
     }
 
-    private ArrayList<BarEntry> getExpenseEntries() {
+    private ArrayList<BarEntry> getBarEntries() {
         ArrayList<BarEntry> entries = new ArrayList<>();
-        String[] columns = {"monthyear", "SUM(amount) as total"};
-        Cursor cursor = databaseHelper.getExpenseSumAmountByMonthYear();
-        int i = 0;
-        while (cursor.moveToNext()) {
-            float totalAmount = cursor.getFloat(1);
-            entries.add(new BarEntry(i++, totalAmount));
+        Map<String, float[]> monthlyData = new HashMap<>();
+
+        Cursor expenseCursor = databaseHelper.getexpensebymonth();
+        while (expenseCursor.moveToNext()) {
+            @SuppressLint("Range") String monthYear = expenseCursor.getString(expenseCursor.getColumnIndex("monthyear"));
+            @SuppressLint("Range") float totalAmount = expenseCursor.getFloat(expenseCursor.getColumnIndex("total"));
+            if (!monthlyData.containsKey(monthYear)) {
+                monthlyData.put(monthYear, new float[]{0f, 0f});
+            }
+            monthlyData.get(monthYear)[0] = totalAmount; // Expenses
         }
-        cursor.close();
+        expenseCursor.close();
+
+        Cursor incomeCursor = databaseHelper.getincomebymonth();
+        while (incomeCursor.moveToNext()) {
+            @SuppressLint("Range") String monthYear = incomeCursor.getString(incomeCursor.getColumnIndex("monthyear"));
+            @SuppressLint("Range") float totalAmount = incomeCursor.getFloat(incomeCursor.getColumnIndex("total"));
+            if (!monthlyData.containsKey(monthYear)) {
+                monthlyData.put(monthYear, new float[]{0f, 0f});
+            }
+            monthlyData.get(monthYear)[1] = totalAmount; // Incomes
+        }
+        incomeCursor.close();
+
+        int i = 0;
+        for (Map.Entry<String, float[]> entry : monthlyData.entrySet()) {
+            entries.add(new BarEntry(i++, entry.getValue()));
+        }
+
         return entries;
     }
 
-    private ArrayList<BarEntry> getIncomeEntries() {
-        ArrayList<BarEntry> entries = new ArrayList<>();
-        String[] columns = {"monthyear", "SUM(amount) as total"};
-        Cursor cursor = databaseHelper.getIncomeSumAmountByMonthYear();
-        int i = 0;
+    private List<String> getMonths() {
+        List<String> months = new ArrayList<>();
+        Cursor cursor = databaseHelper.getReadableDatabase().rawQuery("SELECT DISTINCT monthyear FROM expense UNION SELECT DISTINCT monthyear FROM income ORDER BY monthyear ASC", null);
         while (cursor.moveToNext()) {
-            float totalAmount = cursor.getFloat(1);
-            entries.add(new BarEntry(i++, totalAmount));
-        }
-        cursor.close();
-        return entries;
-    }
-
-
-
-    private ArrayList<String> getMonths() {
-        ArrayList<String> months = new ArrayList<>();
-        String[] columns = {"monthyear"};
-        Cursor cursor = database.query(true, "expense", columns, null, null, null, null, "monthyear", null);
-        while (cursor.moveToNext()) {
-            String monthYear = cursor.getString(0);
-            // Format monthYear as needed, e.g., "Jan 2024"
-            months.add(formatMonthYear(monthYear));
+            @SuppressLint("Range") String monthYear = cursor.getString(cursor.getColumnIndex("monthyear"));
+            months.add(formatMonthYear(monthYear)); // Format the month-year before adding it to the list
         }
         cursor.close();
         return months;
     }
+
     private String formatMonthYear(String monthYear) {
         // Example format: "2024-01" -> "Jan 2024"
         String[] parts = monthYear.split("-");
@@ -138,6 +127,7 @@ public class StatisticsFragment extends Fragment {
         String monthName = new DateFormatSymbols().getMonths()[month - 1];
         return monthName + " " + year;
     }
+
     @Override
     public void onDestroyView() {
         super.onDestroyView();
