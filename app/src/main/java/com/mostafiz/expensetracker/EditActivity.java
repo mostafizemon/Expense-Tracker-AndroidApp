@@ -12,6 +12,8 @@ import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
+import androidx.fragment.app.FragmentManager;
+import androidx.fragment.app.FragmentTransaction;
 
 import com.mostafiz.expensetracker.databinding.ActivityEditBinding;
 
@@ -41,20 +43,20 @@ public class EditActivity extends AppCompatActivity {
         binding.editdescription.setText(description);
         setupSpinner(binding.editspinner,type, category);
 
-//        binding.updateButton.setOnClickListener(v -> {
-//            String newAmount = binding.edittotal.getText().toString();
-//            String newDescription = binding.editdescription.getText().toString();
-//            String newCategory = binding.editspinner.getSelectedItem().toString();
+        binding.editcancel.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+//                FragmentManager fragmentManager = getSupportFragmentManager();
+//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
+//                fragmentTransaction.replace(R.id.mainactivityframelayout, new RecentFragment());
+//                fragmentTransaction.commit();
 //
-//            if (databaseHelper.updateTransaction(id, type, newAmount, newDescription, newCategory)) {
-//                Toast.makeText(EditActivity.this, "Update successful", Toast.LENGTH_SHORT).show();
-//
-//            } else {
-//                Toast.makeText(EditActivity.this, "Update failed", Toast.LENGTH_SHORT).show();
-//            }
-//            startActivity(new Intent(EditActivity.this,RecentFragment.class));
-//            finish();
-//        });
+//                finish();
+                onBackPressed();
+
+            }
+        });
+
 
         binding.updateButton.setOnClickListener(v -> {
             // Update the data in the database
@@ -108,8 +110,8 @@ public class EditActivity extends AppCompatActivity {
     }
 
 
-
-
-
-
+    @Override
+    public void onBackPressed() {
+        super.onBackPressed();
+    }
 }

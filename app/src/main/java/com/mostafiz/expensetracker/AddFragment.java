@@ -88,7 +88,6 @@ public class AddFragment extends Fragment{
                         // Handle the case where "Please select expense category" is selected
                         Toast.makeText(getContext(), "Please select a valid category", Toast.LENGTH_SHORT).show();
                     } else {
-
                             String selectedItem = (String) binding.spinner.getSelectedItem();
                             String currentDateTime = getCurrentDateTime();
                             String currentmonthyear=getcurrentmonthyear();
@@ -151,7 +150,6 @@ public class AddFragment extends Fragment{
         SimpleDateFormat sdf = new SimpleDateFormat("yyyy", Locale.getDefault());
         return sdf.format(new java.util.Date());
     }
-
 
 
 
