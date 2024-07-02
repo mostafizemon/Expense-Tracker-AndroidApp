@@ -59,9 +59,11 @@ public class AddFragment extends Fragment{
             public void onCheckedChanged(RadioGroup group, int checkedId) {
                 if (checkedId == R.id.expense_button) {
                     isExpenseSelected = true;
+                    binding.addtv.setText("Add New Expense");
                     binding.spinner.setAdapter(expenseAdapter);
                 } else if (checkedId == R.id.income_button) {
                     isExpenseSelected = false;
+                    binding.addtv.setText("Add New Income");
                     binding.spinner.setAdapter(incomeAdapter);
                 }
             }

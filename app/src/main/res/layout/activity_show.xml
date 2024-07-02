@@ -14,17 +14,19 @@
         android:layout_height="?actionBarSize"
         android:text="salary"
         android:gravity="center"
-        android:background="@color/light_orange"
+
         android:textSize="@dimen/_18ssp"
         android:textStyle="bold"
-        android:textColor="@color/white"
+        android:textColor="@color/light_orange"
+        android:layout_marginTop="@dimen/_15ssp"
         />
 
     <ListView
         android:id="@+id/showlistview"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:layout_marginTop="?actionBarSize"
+        android:layout_marginTop="@dimen/_15ssp"
+        android:layout_below="@id/showcategory"
         />
 
     <TextView

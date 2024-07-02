@@ -46,12 +46,7 @@ public class EditActivity extends AppCompatActivity {
         binding.editcancel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View view) {
-//                FragmentManager fragmentManager = getSupportFragmentManager();
-//                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-//                fragmentTransaction.replace(R.id.mainactivityframelayout, new RecentFragment());
-//                fragmentTransaction.commit();
-//
-//                finish();
+
                 onBackPressed();
 
             }
