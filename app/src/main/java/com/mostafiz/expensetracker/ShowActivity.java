@@ -39,7 +39,14 @@ public class ShowActivity extends AppCompatActivity {
         View view=binding.getRoot();
         setContentView(view);
 
-        binding.showcategory.setText(showcategory);
+        if (table.equals("expense")){
+            binding.showcategory.setText(showcategory+" Expense");
+        }
+        else {
+            binding.showcategory.setText(showcategory);
+        }
+
+
 
 
         databaseHelper=new DatabaseHelper(ShowActivity.this);
