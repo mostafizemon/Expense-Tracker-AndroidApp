@@ -172,6 +172,8 @@
         android:layout_height="match_parent"
         android:layout_marginTop="@dimen/_10ssp"
         android:numColumns="1"
+        android:layout_marginBottom="@dimen/_40ssp"
+
         />
 
 

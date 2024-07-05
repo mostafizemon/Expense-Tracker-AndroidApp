@@ -3,10 +3,10 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     tools:context=".RecentFragment"
     android:orientation="vertical"
-    android:padding="@dimen/_10ssp"
-    >
+    android:padding="@dimen/_10ssp">
 
 
     <TextView
@@ -21,5 +21,9 @@
     <ListView
         android:id="@+id/recentListView"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
+        android:layout_height="match_parent"
+        android:layout_marginBottom="@dimen/_40ssp"
+        />
+
+
 </LinearLayout>

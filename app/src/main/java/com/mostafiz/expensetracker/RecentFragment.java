@@ -17,6 +17,12 @@ import android.widget.BaseAdapter;
 import android.widget.ImageButton;
 import android.widget.TextView;
 
+import com.google.android.ads.nativetemplates.NativeTemplateStyle;
+import com.google.android.ads.nativetemplates.TemplateView;
+import com.google.android.gms.ads.AdLoader;
+import com.google.android.gms.ads.AdRequest;
+import com.google.android.gms.ads.MobileAds;
+import com.google.android.gms.ads.nativead.NativeAd;
 import com.mostafiz.expensetracker.databinding.FragmentReceiptBinding;
 import com.mostafiz.expensetracker.databinding.FragmentRecentBinding;
 
@@ -31,15 +37,21 @@ public class RecentFragment extends Fragment {
     private ArrayList<HashMap<String, String>> arrayList;
     private HashMap<String, String> hashMap;
     private static final int EDIT_REQUEST_CODE = 1;
+    TemplateView templateView;
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         binding=FragmentRecentBinding.inflate(getLayoutInflater(),container,false);
         View view=binding.getRoot();
-
         databaseHelper = new DatabaseHelper(getContext());
         fetchRecentTransactions();
+        templateView=view.findViewById(R.id.my_template);
+
+
+
+        MobileAds.initialize(getContext());
+
 
 
 
@@ -85,69 +97,111 @@ public class RecentFragment extends Fragment {
     }
 
 
+
+
     public class MyAdapter extends BaseAdapter {
+
+        private static final int TYPE_ITEM = 0;
+        private static final int TYPE_AD = 1;
 
         @Override
         public int getCount() {
-            return arrayList.size();
+            int itemCount = arrayList.size();
+            int adCount = itemCount / 3;
+            return itemCount + adCount;
         }
 
         @Override
-        public Object getItem(int i) {
+        public Object getItem(int position) {
             return null;
         }
 
         @Override
-        public long getItemId(int i) {
+        public long getItemId(int position) {
             return 0;
         }
 
+        @Override
+        public int getItemViewType(int position) {
+            return (position + 1) % 4 == 0 ? TYPE_AD : TYPE_ITEM;
+        }
+
+        @Override
+        public int getViewTypeCount() {
+            return 2; // Two types: regular items and ad items
+        }
+
+        @Override
         public View getView(int position, View convertView, ViewGroup parent) {
-            LayoutInflater inflater=getLayoutInflater();
-            View myview=inflater.inflate(R.layout.list_item_recent,parent,false);
+            int viewType = getItemViewType(position);
 
-            TextView tvCategory = myview.findViewById(R.id.recent_category);
-            TextView tvAmount = myview.findViewById(R.id.recent_amount);
-            TextView tvDescription = myview.findViewById(R.id.recent_description);
-            TextView tvDate = myview.findViewById(R.id.recent_date);
-            ImageButton editButton = myview.findViewById(R.id.edit);
-            ImageButton deleteButton = myview.findViewById(R.id.delete);
+            if (viewType == TYPE_AD) {
+                if (convertView == null) {
+                    LayoutInflater inflater = getLayoutInflater();
+                    convertView = inflater.inflate(R.layout.native_ad, parent, false);
+                }
+                // Check for network availability before loading the ad
+                if (NetworkUtils.isNetworkAvailable(getContext())) {
+                    TemplateView templateView = convertView.findViewById(R.id.my_template);
+                    AdLoader adLoader = new AdLoader.Builder(getContext(), "ca-app-pub-3940256099942544/2247696110")
+                            .forNativeAd(nativeAd -> templateView.setNativeAd(nativeAd))
+                            .build();
+                    adLoader.loadAd(new AdRequest.Builder().build());
+                    templateView.setVisibility(View.VISIBLE);
+                } else {
+                    // Hide the ad view if there is no internet connection
+                    convertView.setVisibility(View.GONE);
+                }
+            } else {
+                if (convertView == null) {
+                    LayoutInflater inflater = getLayoutInflater();
+                    convertView = inflater.inflate(R.layout.list_item_recent, parent, false);
+                }
 
-            hashMap=arrayList.get(position);
+                TextView tvCategory = convertView.findViewById(R.id.recent_category);
+                TextView tvAmount = convertView.findViewById(R.id.recent_amount);
+                TextView tvDescription = convertView.findViewById(R.id.recent_description);
+                TextView tvDate = convertView.findViewById(R.id.recent_date);
+                ImageButton editButton = convertView.findViewById(R.id.edit);
+                ImageButton deleteButton = convertView.findViewById(R.id.delete);
 
-            String type = hashMap.get("type");
-            String date = hashMap.get("date");
-            String category = hashMap.get("category");
-            String description = hashMap.get("description");
-            String amount = hashMap.get("amount");
-            String id=hashMap.get("id");
+                int actualPosition = position - (position / 4); // Adjust position for ads
+                hashMap = arrayList.get(actualPosition);
 
-            tvCategory.setText(category);
-            tvAmount.setText(amount);
-            tvDescription.setText(description);
-            tvDate.setText(date);
+                String type = hashMap.get("type");
+                String date = hashMap.get("date");
+                String category = hashMap.get("category");
+                String description = hashMap.get("description");
+                String amount = hashMap.get("amount");
+                String id = hashMap.get("id");
 
-            editButton.setOnClickListener(v -> {
+                tvCategory.setText(category);
+                tvAmount.setText(amount);
+                tvDescription.setText(description);
+                tvDate.setText(date);
 
-                Intent intent = new Intent(getContext(), EditActivity.class);
-                intent.putExtra("id", id);
-                intent.putExtra("type", type);
-                intent.putExtra("amount", amount);
-                intent.putExtra("description", description);
-                intent.putExtra("category", category);
-                startActivityForResult(intent, EDIT_REQUEST_CODE);
-                // Handle edit button click
-            });
+                editButton.setOnClickListener(v -> {
+                    Intent intent = new Intent(getContext(), EditActivity.class);
+                    intent.putExtra("id", id);
+                    intent.putExtra("type", type);
+                    intent.putExtra("amount", amount);
+                    intent.putExtra("description", description);
+                    intent.putExtra("category", category);
+                    startActivityForResult(intent, EDIT_REQUEST_CODE);
+                });
 
-            deleteButton.setOnClickListener(v -> {
-                databaseHelper.delete(type,id);
-                // Handle delete button click
-                fetchRecentTransactions();
-            });
-
-            return myview;
+                deleteButton.setOnClickListener(v -> {
+                    databaseHelper.delete(type, id);
+                    fetchRecentTransactions();
+                });
+            }
+            return convertView;
         }
     }
+
+
+
+
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
