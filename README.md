@@ -11,7 +11,7 @@ Add, edit, and delete income and expense transactions effortlessly.
 Transactions include details such as category, description, amount, and date.
 
 Recent Transactions:
-A dedicated RecentFragment displays the 10 most recent transactions, both expenses, and incomes.
+A dedicated RecentFragment displays the 10 most recent transactions, both expenses and incomes.
 Users can edit these recent transactions directly from the RecentFragment.
 
 Category-Based Summaries:
@@ -32,7 +32,7 @@ Status Bar Customization:
 Customizable status bar color to match the app's theme, with transparent options available.
 
 Planned Features:
-Implementing a download button to allow users to download receipts.
+I am implementing a download button to allow users to download receipts.
 Future enhancements to expand the editing capabilities beyond the most recent 10 items.
 
 Technical Details:
